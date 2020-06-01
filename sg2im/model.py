@@ -131,6 +131,7 @@ class Sg2ImModel(nn.Module):
     obj_vecs = self.obj_embeddings(objs)
     obj_vecs_orig = obj_vecs
     pred_vecs = self.pred_embeddings(p)
+    print(obj_vecs.size(), pred_vecs.size(), edges.size(), p.size())
 
     if isinstance(self.gconv, nn.Linear):
       obj_vecs = self.gconv(obj_vecs)
@@ -204,6 +205,7 @@ class Sg2ImModel(nn.Module):
     for i, sg in enumerate(scene_graphs):
       # Insert dummy __image__ object and __in_image__ relationships
       sg['objects'].append('__image__')
+
       image_idx = len(sg['objects']) - 1
       for j in range(image_idx):
         sg['relationships'].append([j, '__in_image__', image_idx])
@@ -220,6 +222,8 @@ class Sg2ImModel(nn.Module):
           raise ValueError('Relationship "%s" not in vocab' % p)
         triples.append([s + obj_offset, pred_idx, o + obj_offset])
       obj_offset += len(sg['objects'])
+    print(objs)
+    print(triples)
     device = next(self.parameters()).device
     objs = torch.tensor(objs, dtype=torch.int64, device=device)
     triples = torch.tensor(triples, dtype=torch.int64, device=device)
