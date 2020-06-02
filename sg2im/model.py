@@ -131,7 +131,6 @@ class Sg2ImModel(nn.Module):
     obj_vecs = self.obj_embeddings(objs)
     obj_vecs_orig = obj_vecs
     pred_vecs = self.pred_embeddings(p)
-    print(obj_vecs.size(), pred_vecs.size(), edges.size(), p.size())
 
     if isinstance(self.gconv, nn.Linear):
       obj_vecs = self.gconv(obj_vecs)
