@@ -140,7 +140,7 @@ def _pool_samples(samples, obj_to_img, pooling='sum'):
   """
   dtype, device = samples.dtype, samples.device
   O, D, H, W = samples.size()
-  N = obj_to_img.data.max().item() + 1
+  N = torch.max(obj_to_img).item() + 1
   
   # Use scatter_add to sum the sampled outputs for each image
   out = torch.zeros(N, D, H, W, dtype=dtype, device=device)
@@ -160,76 +160,3 @@ def _pool_samples(samples, obj_to_img, pooling='sum'):
     raise ValueError('Invalid pooling "%s"' % pooling)
 
   return out
-
-
-if __name__ == '__main__':
-  vecs = torch.FloatTensor([
-            [1, 0, 0], [0, 1, 0], [0, 0, 1],
-            [1, 0, 0], [0, 1, 0], [0, 0, 1],
-         ])
-  boxes = torch.FloatTensor([
-            [0.25, 0.125, 0.5, 0.875],
-            [0, 0, 1, 0.25],
-            [0.6125, 0, 0.875, 1],
-            [0, 0.8, 1, 1.0],
-            [0.25, 0.125, 0.5, 0.875],
-            [0.6125, 0, 0.875, 1],
-          ])
-  obj_to_img = torch.LongTensor([0, 0, 0, 1, 1, 1])
-  # vecs = torch.FloatTensor([[[1]]])
-  # boxes = torch.FloatTensor([[[0.25, 0.25, 0.75, 0.75]]])
-  vecs, boxes = vecs.cuda(), boxes.cuda()
-  obj_to_img = obj_to_img.cuda()
-  out = boxes_to_layout(vecs, boxes, obj_to_img, 256, pooling='sum')
-  
-  from torchvision.utils import save_image
-  save_image(out.data, 'out.png')
-
-
-  masks = torch.FloatTensor([
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 1, 1, 0],
-              [1, 1, 1, 1, 1],
-              [0, 1, 1, 1, 0],
-              [0, 0, 1, 0, 0],
-            ],
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 0, 1, 0],
-              [1, 0, 0, 0, 1],
-              [0, 1, 0, 1, 0],
-              [0, 0, 1, 0, 0],
-            ],
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 1, 1, 0],
-              [1, 1, 1, 1, 1],
-              [0, 1, 1, 1, 0],
-              [0, 0, 1, 0, 0],
-            ],
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 1, 1, 0],
-              [1, 1, 1, 1, 1],
-              [0, 1, 1, 1, 0],
-              [0, 0, 1, 0, 0],
-            ],
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 1, 1, 0],
-              [1, 1, 1, 1, 1],
-              [0, 1, 1, 1, 0],
-              [0, 0, 1, 0, 0],
-            ],
-            [
-              [0, 0, 1, 0, 0],
-              [0, 1, 1, 1, 0],
-              [1, 1, 1, 1, 1],
-              [0, 1, 1, 1, 0],
-              [0, 0, 1, 0, 0],
-            ]
-          ])
-  masks = masks.cuda()
-  out = masks_to_layout(vecs, boxes, masks, obj_to_img, 256)
-  save_image(out.data, 'out_masks.png')
