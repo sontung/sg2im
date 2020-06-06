@@ -221,6 +221,7 @@ class Sg2ImModel(nn.Module):
           raise ValueError('Relationship "%s" not in vocab' % p)
         triples.append([s + obj_offset, pred_idx, o + obj_offset])
       obj_offset += len(sg['objects'])
+    print("done enc")
     print(objs)
     print(triples)
     device = next(self.parameters()).device
