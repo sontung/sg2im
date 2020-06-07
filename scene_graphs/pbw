@@ -1,0 +1,35 @@
+[
+  {
+    "objects": ["red"],
+    "relationships": [
+    ]
+  },
+    {
+    "objects": ["yellow"],
+    "relationships": [
+    ]
+  },
+    {
+    "objects": ["green"],
+    "relationships": [
+    ]
+  },
+    {
+    "objects": ["brown"],
+    "relationships": [
+    ]
+  },
+    {
+    "objects": ["brown", "purple"],
+    "relationships": [
+      [0, "up", 1]
+    ]
+  },
+  {
+    "objects": ["gray", "blue", "red"],
+    "relationships": [
+      [0, "left", 1],
+      [2, "up", 1]
+    ]
+  }
+]

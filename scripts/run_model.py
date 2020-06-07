@@ -53,7 +53,7 @@ def main(args):
 
   # Load the model, with a bit of care in case there are no GPUs
   map_location = 'cpu' if device == torch.device('cpu') else None
-  checkpoint = torch.load(args.checkpoint, map_location=map_location)
+  checkpoint = torch.load(args.checkpoint, map_location='cuda:0')
   model = Sg2ImModel(**checkpoint['model_kwargs'])
   model.load_state_dict(checkpoint['model_state'])
   model.eval()
